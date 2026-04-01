@@ -7,6 +7,7 @@ import {
   Switch,
   Pressable,
   Animated,
+  Linking,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,6 +19,10 @@ const SERIF = 'PlayfairDisplay_400Regular';
 const SANS = 'DMSans_400Regular';
 const SANS_LIGHT = 'DMSans_300Light';
 const SANS_MED = 'DMSans_500Medium';
+
+const PRIVACY_POLICY_URL =
+  'https://docs.google.com/document/d/165-2elU6SDRk9BaimIb3bq_OWrfbCXbXz1ft9I_jBZs?tab=t.0';
+const SUPPORT_URL = 'https://helloelementalco.com/contact';
 
 interface Settings {
   gradient_start: string;
@@ -200,6 +205,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     loadSettings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const saveSetting = useCallback(async (key: keyof Settings, value: string | boolean) => {
@@ -230,6 +236,16 @@ export default function ProfileScreen() {
         console.log('[livdaily] override published to API');
       }
     } catch (_) {}
+  };
+
+  const handlePrivacyPolicy = () => {
+    console.log('[livdaily] privacy policy link tapped');
+    Linking.openURL(PRIVACY_POLICY_URL);
+  };
+
+  const handleSupport = () => {
+    console.log('[livdaily] support link tapped');
+    Linking.openURL(SUPPORT_URL);
   };
 
   const gradientStart = settings.gradient_start || '#FF6B35';
@@ -491,6 +507,45 @@ export default function ProfileScreen() {
           {savedKey === 'briefing_override_text' ? (
             <SavedToast visible opacity={savedOpacity} />
           ) : null}
+        </View>
+
+        {/* Footer links */}
+        <View style={{ height: 1, backgroundColor: LD.divider, marginBottom: 40 }} />
+        <View style={{ flexDirection: 'row', gap: 32, paddingBottom: 8 }}>
+          <Pressable
+            onPress={handlePrivacyPolicy}
+            accessibilityRole="link"
+            accessibilityLabel="privacy policy"
+          >
+            <Text
+              style={{
+                fontFamily: SANS,
+                fontSize: 12,
+                color: '#888',
+                textTransform: 'lowercase',
+                letterSpacing: 0.5,
+              }}
+            >
+              privacy policy
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={handleSupport}
+            accessibilityRole="link"
+            accessibilityLabel="support"
+          >
+            <Text
+              style={{
+                fontFamily: SANS,
+                fontSize: 12,
+                color: '#888',
+                textTransform: 'lowercase',
+                letterSpacing: 0.5,
+              }}
+            >
+              support
+            </Text>
+          </Pressable>
         </View>
 
         {/* Hidden premium section — exists in tree but invisible */}

@@ -1,74 +1,65 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = '@livdaily_brand_settings';
-
-export interface BrandSettings {
-  primaryHex: string;
-  secondaryHex: string;
+interface BrandSettings {
   fontSize: number;
   lineHeightMultiplier: number;
   manualOverride: string;
 }
 
-const DEFAULT_SETTINGS: BrandSettings = {
-  primaryHex: '#FFD580',
-  secondaryHex: '#FF6B35',
+const DEFAULT_BRAND_SETTINGS: BrandSettings = {
   fontSize: 17,
   lineHeightMultiplier: 1.65,
   manualOverride: '',
 };
 
-interface BrandSettingsContextType {
+interface BrandSettingsContextValue {
   brandSettings: BrandSettings;
-  updateSettings: (partial: Partial<BrandSettings>) => Promise<void>;
-  isLoaded: boolean;
+  loadBrandSettings: () => Promise<void>;
+  saveBrandSettings: (settings: Partial<BrandSettings>) => Promise<void>;
 }
 
-const BrandSettingsContext = createContext<BrandSettingsContextType | null>(null);
+const BrandSettingsContext = createContext<BrandSettingsContextValue>({
+  brandSettings: DEFAULT_BRAND_SETTINGS,
+  loadBrandSettings: async () => {},
+  saveBrandSettings: async () => {},
+});
+
+const STORAGE_KEY = 'ld_brand_settings';
 
 export function BrandSettingsProvider({ children }: { children: React.ReactNode }) {
-  const [brandSettings, setBrandSettings] = useState<BrandSettings>(DEFAULT_SETTINGS);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [brandSettings, setBrandSettings] = useState<BrandSettings>(DEFAULT_BRAND_SETTINGS);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const raw = await AsyncStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw) as Partial<BrandSettings>;
-          setBrandSettings({ ...DEFAULT_SETTINGS, ...parsed });
-        }
-      } catch (e) {
-        console.log('[BrandSettings] Failed to load settings from AsyncStorage:', e);
-      } finally {
-        setIsLoaded(true);
+  const loadBrandSettings = useCallback(async () => {
+    try {
+      const stored = await AsyncStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Partial<BrandSettings>;
+        setBrandSettings({ ...DEFAULT_BRAND_SETTINGS, ...parsed });
       }
-    };
-    load();
+    } catch (e) {
+      console.warn('[BrandSettings] load error:', e);
+    }
   }, []);
 
-  const updateSettings = useCallback(async (partial: Partial<BrandSettings>) => {
-    console.log('[BrandSettings] Saving settings:', partial);
-    const next = { ...brandSettings, ...partial };
-    setBrandSettings(next);
+  const saveBrandSettings = useCallback(async (settings: Partial<BrandSettings>) => {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      console.log('[BrandSettings] Settings saved successfully');
+      const updated = { ...brandSettings, ...settings };
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      setBrandSettings(updated);
+      console.log('[BrandSettings] saved:', settings);
     } catch (e) {
-      console.log('[BrandSettings] Failed to save settings:', e);
+      console.warn('[BrandSettings] save error:', e);
     }
   }, [brandSettings]);
 
   return (
-    <BrandSettingsContext.Provider value={{ brandSettings, updateSettings, isLoaded }}>
+    <BrandSettingsContext.Provider value={{ brandSettings, loadBrandSettings, saveBrandSettings }}>
       {children}
     </BrandSettingsContext.Provider>
   );
 }
 
 export function useBrandSettings() {
-  const ctx = useContext(BrandSettingsContext);
-  if (!ctx) throw new Error('useBrandSettings must be used within BrandSettingsProvider');
-  return ctx;
+  return useContext(BrandSettingsContext);
 }

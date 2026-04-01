@@ -11,7 +11,6 @@ import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { WidgetProvider } from "@/contexts/WidgetContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
-import { BrandSettingsProvider } from "@/contexts/BrandSettingsContext";
 import {
   useFonts,
   PlayfairDisplay_400Regular,
@@ -80,34 +79,24 @@ export default function RootLayout() {
       <StatusBar style="light" animated />
       <ThemeProvider value={LDDarkTheme}>
         <SafeAreaProvider>
-          <BrandSettingsProvider>
-            <WidgetProvider>
-              <SubscriptionProvider>
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                  <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen
-                      name="paywall"
-                      options={{
-                        presentation: 'modal',
-                        headerShown: false,
-                        animation: 'slide_from_bottom',
-                      }}
-                    />
-                    <Stack.Screen
-                      name="brand-settings"
-                      options={{
-                        presentation: 'modal',
-                        headerShown: false,
-                        animation: 'slide_from_bottom',
-                      }}
-                    />
-                  </Stack>
-                  <SystemBars style="light" />
-                </GestureHandlerRootView>
-              </SubscriptionProvider>
-            </WidgetProvider>
-          </BrandSettingsProvider>
+          <WidgetProvider>
+            <SubscriptionProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="paywall"
+                    options={{
+                      presentation: 'modal',
+                      headerShown: false,
+                      animation: 'slide_from_bottom',
+                    }}
+                  />
+                </Stack>
+                <SystemBars style="light" />
+              </GestureHandlerRootView>
+            </SubscriptionProvider>
+          </WidgetProvider>
         </SafeAreaProvider>
       </ThemeProvider>
     </>

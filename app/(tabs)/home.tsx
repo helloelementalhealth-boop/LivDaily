@@ -223,6 +223,7 @@ export default function HomeScreen() {
     updateStreak();
     loadEmergencyAlert();
     fetchBriefing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogoLongPress = () => {
