@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Natively App",
-    "slug": "natively-app",
+    "name": "1-can-i-trigger-a-we",
+    "slug": "1-can-i-trigger-a-we",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/app-icon-jxj.png",
@@ -35,7 +35,7 @@
       "expo-web-browser",
       "expo-secure-store"
     ],
-    "scheme": "nativelyapp",
+    "scheme": "1canitriggerawe",
     "experiments": {
       "typedRoutes": true
     },
