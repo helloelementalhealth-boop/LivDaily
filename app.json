@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "1-can-i-trigger-a-we",
+    "name": "LivDaily™",
     "slug": "1-can-i-trigger-a-we",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -38,7 +38,7 @@
       "expo-web-browser",
       "expo-secure-store"
     ],
-    "scheme": "1canitriggerawe",
+    "scheme": "livdaily",
     "experiments": {
       "typedRoutes": true
     },
