@@ -14,6 +14,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.placeholder.app",
+      "newArchEnabled": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -23,7 +24,8 @@
         "foregroundImage": "./assets/images/livdaily_app.png",
         "backgroundColor": "#0D1117"
       },
-      "package": "com.placeholder.app"
+      "package": "com.placeholder.app",
+      "newArchEnabled": true
     },
     "web": {
       "favicon": "./assets/images/final_quest_240x240.png",
