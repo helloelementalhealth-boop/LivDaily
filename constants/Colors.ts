@@ -20,6 +20,7 @@ export const appleRed = "#FF3B30";
 
 export const borderColor = "#A1A1AA80";
 export const appleGreen = "#34C759";
+
 export const Colors = {
   light: {
     text: "#11181C",
@@ -37,6 +38,22 @@ export const Colors = {
     tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
   },
+};
+
+// livdaily design tokens
+export const LD = {
+  background: '#0D1117',
+  surface: '#161B22',
+  surfaceSecondary: '#1C2128',
+  text: '#F0EDE8',
+  textSecondary: 'rgba(240,237,232,0.6)',
+  textTertiary: 'rgba(240,237,232,0.35)',
+  primary: '#FF6B35',
+  primaryEnd: '#E63946',
+  border: 'rgba(240,237,232,0.08)',
+  divider: 'rgba(240,237,232,0.04)',
+  amber: '#F59E0B',
+  amberBg: 'rgba(245,158,11,0.12)',
 };
 
 export const backgroundColors = [
@@ -215,247 +232,4 @@ export const backgroundColors = [
   "#be123c",
   "#9f1239",
   "#881337",
-];
-
-export const emojies = [
-  // Fruits
-  "🍏",
-  "🍎",
-  "🍐",
-  "🍊",
-  "🍋",
-  "🍌",
-  "🍉",
-  "🍇",
-  "🍓",
-  "🫐",
-  "🍈",
-  "🍒",
-  "🍑",
-  "🥭",
-  "🍍",
-  "🥥",
-  "🥝",
-
-  // Vegetables
-  "🍅",
-  "🍆",
-  "🥑",
-  "🥦",
-  "🥬",
-  "🥒",
-  "🌶",
-  "🫑",
-  "🌽",
-  "🥕",
-  "🥔",
-  "🧄",
-  "🧅",
-  "🍄",
-
-  // Breads & Bakery
-  "🍞",
-  "🥖",
-  "🥨",
-  "🥐",
-  "🥯",
-
-  // Dairy & Eggs
-  "🧀",
-  "🥚",
-  "🍳",
-  "🥞",
-  "🧇",
-
-  // Meats
-  "🥓",
-  "🥩",
-  "🍗",
-  "🍖",
-
-  // Fast Foods
-  "🌭",
-  "🍔",
-  "🍟",
-  "🍕",
-
-  // Wraps, Sandwiches & Ethnic Foods
-  "🥪",
-  "🌮",
-  "🌯",
-  "🫔",
-  "🥙",
-  "🧆",
-
-  // Pasta, Rice & Asian Foods
-  "🍜",
-  "🍝",
-  "🍣",
-  "🍤",
-  "🍙",
-  "🍚",
-  "🍛",
-  "🍲",
-  "🥘",
-  "🥗",
-
-  // Snacks & Misc
-  "🍿",
-  "🧈",
-  "🥫",
-  "🍱",
-  "🥮",
-  "🍠",
-  "🍥",
-  "🥟",
-  "🥠",
-  "🥡",
-
-  // Desserts & Sweets
-  "🍦",
-  "🍧",
-  "🍨",
-  "🍩",
-  "🍪",
-  "🧁",
-  "🍰",
-  "🎂",
-  "🍮",
-  "🍭",
-  "🍬",
-  "🍫",
-  "🍯",
-
-  // Nuts
-  "🥜",
-  "🌰",
-
-  // Drinks
-  "🥛",
-  "🧃",
-  "🧉",
-  "🥤",
-  "🍶",
-  "🍵",
-  "🍺",
-  "🍻",
-  "🥂",
-  "🍷",
-  "🍸",
-  "🍹",
-  "🥃",
-  "🍾",
-  "☕️",
-  "🫖",
-
-  // Utensils & Condiments
-  "🥄",
-  "🍴",
-  "🍽",
-  "🥢",
-  "🧂",
-
-  // Shopping & Payment
-  "🛒",
-  "🛍️",
-  "🧺",
-  "💳",
-  "💸",
-  "💵",
-  "💰",
-  "💲",
-  "🧾",
-  "🔖",
-  "🏪",
-  "🏬",
-  "🏦",
-  "🏧",
-  "📦",
-  "📮",
-  "🏷️",
-
-  // Organizational / Utility
-  "✅",
-  "📋",
-  "📜",
-  "✏️",
-  "📝",
-  "🔍",
-  "📆",
-  "⏰",
-  "📱",
-  "💻",
-  "🌐",
-  "🔗",
-  "🔒",
-  "🔑",
-  "🗃️",
-  "🗂️",
-  "🔄",
-  "💡",
-  "⭐️",
-  "📌",
-  "📍",
-  "📊",
-  "💯",
-  "🎉",
-  "🎊",
-  "🎁",
-  "🏆",
-  "⚖️",
-  "🏠",
-
-  // Transportation & Movement (for shopping trips)
-  "🚗",
-  "🏃‍♂️",
-  "🏃‍♀️",
-  "🚶‍♂️",
-  "🚶‍♀️",
-
-  // Clothing (Items to buy)
-  "👕",
-  "👖",
-  "👗",
-  "👔",
-  "🩳",
-  "👠",
-  "👟",
-  "🧥",
-  "🧤",
-  "🧣",
-  "🧦",
-  "🎒",
-  "👜",
-  "👛",
-  "👓",
-  "🕶️",
-  "👒",
-
-  // Household Items (Things you might add to a shopping list)
-  "🪣",
-  "🪑",
-  "🛋️",
-  "🚪",
-  "🪟",
-  "🏺",
-  "🖼️",
-  "📺",
-  "📻",
-  "🔌",
-  "🧴",
-  "🪥",
-  "🧹",
-  "🧽",
-  "🗑️",
-  "🪒",
-  "💊",
-  "💉",
-  "🩹",
-  "❤️",
-  "💔",
-  "💘",
-  "💙",
-  "💚",
-  "💛",
-  "💜",
 ];

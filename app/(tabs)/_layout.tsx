@@ -1,15 +1,34 @@
 import React from 'react';
-import { Stack } from 'expo-router';
+import { View } from 'react-native';
+import { Slot } from 'expo-router';
+import FloatingTabBar from '@/components/FloatingTabBar';
+import { LD } from '@/constants/Colors';
+
+const TABS = [
+  {
+    name: 'home',
+    route: '/(tabs)/home' as const,
+    icon: 'wb-sunny' as const,
+    label: 'home',
+  },
+  {
+    name: 'profile',
+    route: '/(tabs)/profile' as const,
+    icon: 'settings' as const,
+    label: 'settings',
+  },
+];
 
 export default function TabLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        animation: 'none',
-      }}
-    >
-      <Stack.Screen key="home" name="(home)" />
-    </Stack>
+    <View style={{ flex: 1, backgroundColor: LD.background }}>
+      <Slot />
+      <FloatingTabBar
+        tabs={TABS}
+        containerWidth={200}
+        borderRadius={35}
+        bottomMargin={20}
+      />
+    </View>
   );
 }
