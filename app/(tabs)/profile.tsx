@@ -21,7 +21,7 @@ const SANS_LIGHT = 'DMSans_300Light';
 const SANS_MED = 'DMSans_500Medium';
 
 const PRIVACY_POLICY_URL =
-  'https://docs.google.com/document/d/165-2elU6SDRk9BaimIb3bq_OWrfbCXbXz1ft9I_jBZs?tab=t.0';
+  'https://docs.google.com/document/d/e/2PACX-1vSvxzli30KXcF2MpOaBEKB87Knjz9fejkX1Qqq7aPP4K-pHCveVSKowLVTDDJixzHXrKAeQjIJYJ_oj/pub';
 const SUPPORT_URL = 'https://helloelementalco.com/contact';
 
 interface Settings {
