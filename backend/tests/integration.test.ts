@@ -89,6 +89,43 @@ describe("API Integration Tests", () => {
     expect(data.cta_label).toBe("commence protocol");
   });
 
+  test("POST /api/briefings/override - missing required field (date)", async () => {
+    const res = await authenticatedApi("/api/briefings/override", authToken, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        headline: "Test Headline",
+        body: "Test Body",
+      }),
+    });
+    // Should reject missing required field - expect error status
+    await expectStatus(res, 400, 500);
+  });
+
+  test("POST /api/briefings/override - missing required field (headline)", async () => {
+    const res = await authenticatedApi("/api/briefings/override", authToken, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: "2026-04-05",
+        body: "Test Body",
+      }),
+    });
+    await expectStatus(res, 400, 500);
+  });
+
+  test("POST /api/briefings/override - missing required field (body)", async () => {
+    const res = await authenticatedApi("/api/briefings/override", authToken, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: "2026-04-06",
+        headline: "Test Headline",
+      }),
+    });
+    await expectStatus(res, 400, 500);
+  });
+
   // Reports endpoints - /api/reports/*
   test("GET /api/reports/today - unauthorized without token", async () => {
     const res = await api("/api/reports/today");
@@ -183,5 +220,24 @@ describe("API Integration Tests", () => {
     const data = await res.json();
     expect(data.settings.theme_preference).toBe("light");
     expect(data.settings.notifications).toBe("enabled");
+  });
+
+  test("POST /api/settings - missing required field (key)", async () => {
+    const res = await authenticatedApi("/api/settings", authToken, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: "test_value" }),
+    });
+    // Should reject missing required field - expect error status
+    await expectStatus(res, 400, 500);
+  });
+
+  test("POST /api/settings - missing required field (value)", async () => {
+    const res = await authenticatedApi("/api/settings", authToken, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "test_key" }),
+    });
+    await expectStatus(res, 400, 500);
   });
 });

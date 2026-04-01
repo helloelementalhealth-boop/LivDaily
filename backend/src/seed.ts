@@ -20,34 +20,34 @@ export async function seedData(app: App) {
   const todayDate = formatDate(today);
 
   try {
-    // Prepare all briefing records to seed, including hardcoded test dates
+    // Prepare all briefing records to seed
     const briefingsToSeed = [
       {
-        briefingDate: threeDaysAgoDate,
-        headline: 'the architecture of attention',
-        body: 'In an era of infinite distraction, the most radical act is deliberate focus. The mind, like any precision instrument, requires calibration — not constant stimulation. Today\'s protocol is simple: identify the single most consequential task before you open any application. Execute it first. Everything else is noise.',
-        ctaLabel: 'commence protocol',
+        briefingDate: '2024-01-15',
+        headline: 'Markets shift as rate signals grow louder',
+        body: 'The Fed\'s latest comments moved bond yields higher overnight. Traders are repricing rate cut expectations for the second time this month.\n\nEquity futures are mixed. Tech is holding steady while financials face pressure from the yield move.\n\nWatch the 10-year closely today. It is the clearest signal of where sentiment sits.',
+        ctaLabel: 'Read full report',
         isOverride: false,
       },
       {
-        briefingDate: twoDaysAgoDate,
-        headline: 'the discipline of the unfinished',
-        body: 'Completion is overrated. The most productive minds understand that momentum matters more than closure. A task left deliberately open invites the subconscious to continue working in the background — a phenomenon the psychologists call the Zeigarnik effect. Use it. Leave one thread unresolved at the end of each session, and return to it with renewed clarity.',
-        ctaLabel: 'commence protocol',
+        briefingDate: '2024-01-16',
+        headline: 'Consumer spending holds despite credit tightening',
+        body: 'Retail data came in above expectations. Spending on services is driving the beat, not goods.\n\nCredit card delinquencies ticked up for the third straight month. That is a slow-moving signal worth tracking.\n\nThe gap between spending strength and credit stress is the story. It will not stay wide for long.',
+        ctaLabel: 'See the data',
         isOverride: false,
       },
       {
-        briefingDate: oneDayAgoDate,
-        headline: 'silence as a competitive advantage',
-        body: 'The rarest resource in modern work is not time — it is uninterrupted thought. Deep work, by its nature, requires the elimination of ambient noise, both literal and digital. Schedule one hour of complete silence before noon. No notifications, no meetings, no ambient media. The quality of your output will speak for itself.',
-        ctaLabel: 'commence protocol',
+        briefingDate: '2024-01-17',
+        headline: 'Energy prices block the path to lower inflation',
+        body: 'Oil moved back above $85 this week. That puts upward pressure on headline CPI just as core was starting to cool.\n\nThe Fed has limited tools against supply-side price shocks. This is a noise problem, not a policy problem.\n\nExpect the next inflation print to be noisy. Strip out energy and the trend is still intact.',
+        ctaLabel: 'Dig into the numbers',
         isOverride: false,
       },
       {
         briefingDate: todayDate,
-        headline: 'the architecture of attention',
-        body: 'In an era of infinite distraction, the most radical act is deliberate focus. The mind, like any precision instrument, requires calibration — not constant stimulation. Today\'s protocol is simple: identify the single most consequential task before you open any application. Execute it first. Everything else is noise.',
-        ctaLabel: 'commence protocol',
+        headline: 'Markets shift as rate signals grow louder',
+        body: 'The Fed\'s latest comments moved bond yields higher overnight. Traders are repricing rate cut expectations for the second time this month.\n\nEquity futures are mixed. Tech is holding steady while financials face pressure from the yield move.\n\nWatch the 10-year closely today. It is the clearest signal of where sentiment sits.',
+        ctaLabel: 'Read full report',
         isOverride: false,
       },
     ];
@@ -56,9 +56,9 @@ export async function seedData(app: App) {
     if (todayDate !== '2026-04-01') {
       briefingsToSeed.push({
         briefingDate: '2026-04-01',
-        headline: 'the architecture of attention',
-        body: 'In an era of infinite distraction, the most radical act is deliberate focus. The mind, like any precision instrument, requires calibration — not constant stimulation. Today\'s protocol is simple: identify the single most consequential task before you open any application. Execute it first. Everything else is noise.',
-        ctaLabel: 'commence protocol',
+        headline: 'Markets shift as rate signals grow louder',
+        body: 'The Fed\'s latest comments moved bond yields higher overnight. Traders are repricing rate cut expectations for the second time this month.\n\nEquity futures are mixed. Tech is holding steady while financials face pressure from the yield move.\n\nWatch the 10-year closely today. It is the clearest signal of where sentiment sits.',
+        ctaLabel: 'Read full report',
         isOverride: false,
       });
     }

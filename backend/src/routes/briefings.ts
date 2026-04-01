@@ -29,6 +29,37 @@ function transformBriefing(briefing: any) {
   };
 }
 
+// Sanitization function to enforce character constraints
+function sanitizeBriefingText(text: string): string {
+  let sanitized = text;
+
+  // Replace em dashes with period + space
+  sanitized = sanitized.replace(/—/g, '. ');
+
+  // Replace en dashes with period + space
+  sanitized = sanitized.replace(/–/g, '. ');
+
+  // Replace exclamation points with periods
+  sanitized = sanitized.replace(/!/g, '.');
+
+  // Strip all emoji characters (unicode ranges for emoji)
+  sanitized = sanitized.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+
+  // Collapse double periods
+  sanitized = sanitized.replace(/\.{2,}/g, '.');
+
+  // Clean up ". ." artifacts
+  sanitized = sanitized.replace(/\.\s*\./g, '.');
+
+  // Clean up multiple spaces
+  sanitized = sanitized.replace(/\s+/g, ' ');
+
+  // Trim whitespace
+  sanitized = sanitized.trim();
+
+  return sanitized;
+}
+
 export function registerBriefingsRoutes(app: App) {
   // GET /api/briefings/today - Get or generate today's briefing
   app.fastify.get<{ Querystring: BriefingQuerystring }>(
@@ -97,8 +128,8 @@ export function registerBriefingsRoutes(app: App) {
           const result = await generateText({
             model: gateway('openai/gpt-4o-mini'),
             system:
-              'You are the editorial intelligence engine for livdaily — a high-end, editorial-first productivity platform. Your voice is precise, measured, and authoritative. Write like a seasoned editor at a world-class publication. No hype, no fluff. Every word earns its place.',
-            prompt: `Generate a daily briefing for ${targetDate}. Return a JSON object with: headline (a sharp, single-sentence editorial headline, lowercase, no period), body (3-5 sentences of substantive editorial insight about focus, productivity, and intentional living — written in a refined, literary style), cta_label (always exactly: 'commence protocol'). Return only valid JSON.`,
+              'You are a briefing writer. Your job is to produce a short, clear daily briefing.\n\nVoice rules:\n- Professional and structured, but not stiff or corporate.\n- Short lines. Clean phrasing.\n- Human and warm, but not caretaking. No soothing or instructive language.\n- Use real-life, high-impact words (move, shift, block, signal, noise) instead of academic or philosophical terms.\n- Start with the core thesis. No wind-up.\n\nBanned phrases — never use:\n- "In an era of..."\n- "It is important to..."\n- "I hope..."\n- "You should..."\n- Any filler or throat-clearing before the main point.\n\nStrict character bans — these characters must NEVER appear in your output:\n- NO em dashes (—)\n- NO en dashes (–)\n- NO emojis of any kind\n- NO exclamation points (!)\n- NO ALL CAPS words\n- NO Title Case for body text (sentence case only)\n\nIf a sentence would need a dash for complexity, rewrite it as two shorter sentences instead.\nUse periods or line breaks to separate thoughts.\n\nOutput format:\n- headline: A single sentence in sentence case. No punctuation at the end unless it is a period.\n- body: 3 to 5 short paragraphs. Each paragraph is 1 to 3 sentences. Sentence case throughout.\n- cta_label: 2 to 4 words. Sentence case. No punctuation.',
+            prompt: `Generate a daily briefing for ${targetDate}. Return a JSON object with: headline (a single sentence in sentence case), body (3 to 5 paragraphs, 1 to 3 sentences each), cta_label (2 to 4 words, sentence case). Return only valid JSON.`,
           });
           text = result.text;
         } catch (aiError) {
@@ -113,6 +144,11 @@ export function registerBriefingsRoutes(app: App) {
           app.logger.error({ err: parseError, text }, 'Failed to parse AI response');
           throw new Error('Failed to parse AI-generated briefing');
         }
+
+        // Sanitize the generated content
+        generatedContent.headline = sanitizeBriefingText(generatedContent.headline);
+        generatedContent.body = sanitizeBriefingText(generatedContent.body);
+        generatedContent.cta_label = sanitizeBriefingText(generatedContent.cta_label);
 
         // Insert into database
         const [newBriefing] = await app.db
@@ -189,9 +225,14 @@ export function registerBriefingsRoutes(app: App) {
         const session = await requireAuth(request, reply);
         if (!session) return;
 
-        const { date, headline, body, cta_label } = request.body;
+        const { date, headline: rawHeadline, body: rawBody, cta_label: rawCtaLabel } = request.body;
 
-        app.logger.info({ date, headline }, 'Overriding briefing');
+        app.logger.info({ date, headline: rawHeadline }, 'Overriding briefing');
+
+        // Sanitize the input content
+        const headline = sanitizeBriefingText(rawHeadline);
+        const body = sanitizeBriefingText(rawBody);
+        const cta_label = rawCtaLabel ? sanitizeBriefingText(rawCtaLabel) : 'commence protocol';
 
         // Try to find existing briefing
         const existingBriefings = await app.db
@@ -209,7 +250,7 @@ export function registerBriefingsRoutes(app: App) {
             .set({
               headline,
               body,
-              ctaLabel: cta_label || 'commence protocol',
+              ctaLabel: cta_label,
               isOverride: true,
             })
             .where(eq(schema.dailyBriefings.briefingDate, date))
@@ -222,7 +263,7 @@ export function registerBriefingsRoutes(app: App) {
               briefingDate: date,
               headline,
               body,
-              ctaLabel: cta_label || 'commence protocol',
+              ctaLabel: cta_label,
               isOverride: true,
             })
             .returning();
