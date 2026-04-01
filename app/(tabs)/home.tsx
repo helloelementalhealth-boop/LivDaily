@@ -7,12 +7,14 @@ import {
   Pressable,
   Image,
   ImageSourcePropType,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { LD } from '@/constants/Colors';
+import { useBrandSettings } from '@/contexts/BrandSettingsContext';
 
 const BASE_URL = 'https://7eapc2dc4ufkh52uzd6nm5yazjg26qne.app.specular.dev';
 
@@ -22,6 +24,11 @@ const SANS_LIGHT = 'DMSans_300Light';
 
 const STORAGE_STREAK = 'ld_streak';
 const STORAGE_LAST_OPEN = 'ld_last_open';
+
+const HEX_REGEX = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
+function isValidHex(val: string): boolean {
+  return HEX_REGEX.test((val || '').trim());
+}
 
 interface DailyBriefing {
   id: string;
@@ -85,6 +92,8 @@ function SkeletonLine({ width, height = 14 }: { width: number | string; height?:
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const { brandSettings } = useBrandSettings();
 
   const [briefing, setBriefing] = useState<DailyBriefing | null>(null);
   const [loading, setLoading] = useState(true);
@@ -98,6 +107,13 @@ export default function HomeScreen() {
   const ctaConfirmOpacity = useRef(new Animated.Value(0)).current;
 
   const dateDisplay = formatDateLine();
+
+  // Brand settings derived values
+  const horizontalPadding = width * 0.12;
+  const baseFontSize = brandSettings.fontSize > 0 ? brandSettings.fontSize : 17;
+  const lineHeightMultiplier = brandSettings.lineHeightMultiplier > 0 ? brandSettings.lineHeightMultiplier : 1.65;
+  const briefingLineHeight = baseFontSize * lineHeightMultiplier;
+  const hasManualOverride = brandSettings.manualOverride && brandSettings.manualOverride.trim().length > 0;
 
   // Streak logic
   const updateStreak = useCallback(async () => {
@@ -154,6 +170,14 @@ export default function HomeScreen() {
 
   // Fetch briefing
   const fetchBriefing = useCallback(async (forceRefresh = false) => {
+    // If manual override is set, skip API fetch
+    if (hasManualOverride) {
+      console.log('[livdaily] manual override active, skipping API fetch');
+      setLoading(false);
+      animateContent();
+      return;
+    }
+
     const today = getTodayKey();
     const cacheKey = `ld_briefing_cache_${today}`;
 
@@ -193,7 +217,7 @@ export default function HomeScreen() {
       setError(true);
       setLoading(false);
     }
-  }, [animateContent]);
+  }, [animateContent, hasManualOverride]);
 
   useEffect(() => {
     updateStreak();
@@ -202,13 +226,14 @@ export default function HomeScreen() {
   }, []);
 
   const handleLogoLongPress = () => {
-    console.log('[livdaily] logo long-pressed — navigating to profile');
+    console.log('[livdaily] logo long-pressed — opening brand settings');
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    router.push('/(tabs)/profile');
+    router.push('/brand-settings');
   };
 
   const handleCtaPress = () => {
-    console.log('[livdaily] CTA button pressed:', briefing?.cta_label);
+    const label = briefing?.cta_label ?? 'commence protocol';
+    console.log('[livdaily] CTA button pressed:', label);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCtaConfirm(true);
     ctaConfirmOpacity.setValue(1);
@@ -227,6 +252,14 @@ export default function HomeScreen() {
 
   const ctaLabel = briefing?.cta_label ?? 'commence protocol';
   const streakText = `sequence: day ${streak}`;
+
+  // Determine body text to display
+  const bodyText = hasManualOverride
+    ? brandSettings.manualOverride.trim()
+    : briefing?.body ?? '';
+
+  // Determine headline to display
+  const headlineText = hasManualOverride ? '' : briefing?.headline ?? '';
 
   return (
     <View style={{ flex: 1, backgroundColor: LD.background }}>
@@ -284,12 +317,12 @@ export default function HomeScreen() {
           pointerEvents="none"
         />
 
-        {/* LD Logo */}
+        {/* LD Logo — long-press 800ms opens brand settings */}
         <Pressable
           onLongPress={handleLogoLongPress}
-          delayLongPress={400}
+          delayLongPress={800}
           style={{ alignItems: 'center', marginBottom: 24 }}
-          accessibilityLabel="livdaily logo — long press for settings"
+          accessibilityLabel="livdaily logo — long press for brand settings"
         >
           <View
             style={{
@@ -338,7 +371,7 @@ export default function HomeScreen() {
         </Text>
 
         {/* Content area */}
-        {loading && (
+        {loading && !hasManualOverride && (
           <View style={{ width: '100%', alignItems: 'center', gap: 16, paddingHorizontal: 32 }}>
             <SkeletonLine width="85%" height={28} />
             <SkeletonLine width="70%" height={28} />
@@ -349,7 +382,7 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {error && !loading && (
+        {error && !loading && !hasManualOverride && (
           <View style={{ alignItems: 'center', gap: 20, paddingHorizontal: 32 }}>
             <Text
               style={{
@@ -388,9 +421,28 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {!loading && !error && briefing && (
+        {/* Manual override display */}
+        {hasManualOverride && (
+          <Animated.Text
+            style={{
+              opacity: bodyOpacity,
+              fontFamily: SANS_LIGHT,
+              fontSize: baseFontSize,
+              color: 'rgba(240,237,232,0.75)',
+              lineHeight: briefingLineHeight,
+              textAlign: 'center',
+              paddingHorizontal: horizontalPadding,
+              marginBottom: 56,
+            }}
+          >
+            {bodyText}
+          </Animated.Text>
+        )}
+
+        {/* API briefing display */}
+        {!loading && !error && briefing && !hasManualOverride && (
           <>
-            {/* Editorial Headline */}
+            {/* Editorial headline */}
             <Animated.Text
               style={{
                 opacity: headlineOpacity,
@@ -404,67 +456,66 @@ export default function HomeScreen() {
                 marginBottom: 32,
               }}
             >
-              {briefing.headline}
+              {headlineText}
             </Animated.Text>
 
-            {/* Briefing Body */}
+            {/* Briefing body */}
             <Animated.Text
               style={{
                 opacity: bodyOpacity,
-                fontFamily: SERIF,
-                fontSize: 17,
+                fontFamily: SANS_LIGHT,
+                fontSize: baseFontSize,
                 fontWeight: '300',
                 color: 'rgba(240,237,232,0.75)',
-                lineHeight: 28,
+                lineHeight: briefingLineHeight,
                 textAlign: 'center',
-                marginHorizontal: 24,
+                paddingHorizontal: horizontalPadding,
                 marginBottom: 56,
               }}
             >
-              {briefing.body}
+              {bodyText}
             </Animated.Text>
-
-            {/* CTA Button */}
-            <View style={{ alignItems: 'center', marginBottom: 16 }}>
-              <Pressable
-                onPress={handleCtaPress}
-                style={{ alignItems: 'center', paddingHorizontal: 32, paddingVertical: 8 }}
-                accessibilityRole="button"
-                accessibilityLabel={ctaLabel}
-              >
-                <View style={{ height: 1, backgroundColor: 'rgba(240,237,232,0.15)', width: 120, marginBottom: 12 }} />
-                <Text
-                  style={{
-                    fontFamily: SANS,
-                    fontSize: 11,
-                    letterSpacing: 3,
-                    color: 'rgba(240,237,232,0.5)',
-                    textTransform: 'lowercase',
-                  }}
-                >
-                  {ctaLabel}
-                </Text>
-                <View style={{ height: 1, backgroundColor: 'rgba(240,237,232,0.15)', width: 120, marginTop: 12 }} />
-              </Pressable>
-
-              {/* CTA confirmation */}
-              {ctaConfirm && (
-                <Animated.Text
-                  style={{
-                    opacity: ctaConfirmOpacity,
-                    fontFamily: SANS,
-                    fontSize: 11,
-                    letterSpacing: 2,
-                    color: LD.primary,
-                    textTransform: 'lowercase',
-                    marginTop: 16,
-                  }}
-                >
-                  protocol initiated
-                </Animated.Text>
-              )}
-            </View>
           </>
+        )}
+
+        {/* CTA — plain text link, no border, no background */}
+        {(!loading || hasManualOverride) && !error && (
+          <View style={{ alignItems: 'center', marginBottom: 16 }}>
+            <Pressable
+              onPress={handleCtaPress}
+              style={{ alignItems: 'center', paddingHorizontal: 32, paddingVertical: 8 }}
+              accessibilityRole="button"
+              accessibilityLabel={ctaLabel}
+            >
+              <Text
+                style={{
+                  fontFamily: SANS,
+                  fontSize: 13,
+                  letterSpacing: 1,
+                  color: '#888',
+                }}
+              >
+                {ctaLabel}
+              </Text>
+            </Pressable>
+
+            {/* CTA confirmation */}
+            {ctaConfirm && (
+              <Animated.Text
+                style={{
+                  opacity: ctaConfirmOpacity,
+                  fontFamily: SANS,
+                  fontSize: 11,
+                  letterSpacing: 2,
+                  color: LD.primary,
+                  textTransform: 'lowercase',
+                  marginTop: 16,
+                }}
+              >
+                protocol initiated
+              </Animated.Text>
+            )}
+          </View>
         )}
       </ScrollView>
     </View>
