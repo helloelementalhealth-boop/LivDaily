@@ -21,7 +21,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/app-icon-jxj.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#0D1117"
       },
       "package": "com.placeholder.app"
     },
