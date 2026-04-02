@@ -4,6 +4,7 @@ import * as authSchema from './db/schema/auth-schema.js';
 import { registerBriefingsRoutes } from './routes/briefings.js';
 import { registerReportsRoutes } from './routes/reports.js';
 import { registerSettingsRoutes } from './routes/settings.js';
+import { registerRoomsRitualsRoutes } from './routes/rooms-rituals.js';
 import { seedData } from './seed.js';
 
 const schema = { ...appSchema, ...authSchema };
@@ -24,6 +25,7 @@ await seedData(app);
 registerBriefingsRoutes(app);
 registerReportsRoutes(app);
 registerSettingsRoutes(app);
+registerRoomsRitualsRoutes(app);
 
 await app.run();
 app.logger.info('Application running');

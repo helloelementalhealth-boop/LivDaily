@@ -3,6 +3,8 @@ import { api, authenticatedApi, signUpTestUser, expectStatus, connectWebSocket, 
 
 describe("API Integration Tests", () => {
   let authToken: string;
+  let roomWithRituals: string | null = null;
+  let ritualId: string | null = null;
 
   test("Sign up test user", async () => {
     const { token } = await signUpTestUser();
@@ -239,5 +241,60 @@ describe("API Integration Tests", () => {
       body: JSON.stringify({ key: "test_key" }),
     });
     await expectStatus(res, 400, 500);
+  });
+
+  // Rooms endpoints - /api/rooms
+  test("GET /api/rooms - list all rooms", async () => {
+    const res = await api("/api/rooms");
+    await expectStatus(res, 200);
+    const data = await res.json();
+    expect(data.rooms).toBeDefined();
+    expect(Array.isArray(data.rooms)).toBe(true);
+    if (data.rooms && data.rooms.length > 0) {
+      roomWithRituals = data.rooms[0].id;
+      expect(data.rooms[0].id).toBeDefined();
+      expect(data.rooms[0].title).toBeDefined();
+    }
+  });
+
+  // Rituals endpoints - /api/rooms/{roomId}/rituals and /api/rituals/{id}
+  test("GET /api/rooms/{roomId}/rituals - with valid room (if available)", async () => {
+    if (!roomWithRituals) {
+      // Skip if no rooms available
+      return;
+    }
+    const res = await api(`/api/rooms/${roomWithRituals}/rituals`);
+    await expectStatus(res, 200);
+    const data = await res.json();
+    expect(data.rituals).toBeDefined();
+    expect(Array.isArray(data.rituals)).toBe(true);
+    if (data.rituals && data.rituals.length > 0) {
+      ritualId = data.rituals[0].id;
+      expect(data.rituals[0].title).toBeDefined();
+    }
+  });
+
+  test("GET /api/rooms/{roomId}/rituals - with non-existent room (valid UUID format)", async () => {
+    const nonExistentUUID = "00000000-0000-0000-0000-000000000000";
+    const res = await api(`/api/rooms/${nonExistentUUID}/rituals`);
+    await expectStatus(res, 404);
+  });
+
+  test("GET /api/rituals/{id} - with valid ritual (if available)", async () => {
+    if (!ritualId) {
+      // Skip if no rituals available
+      return;
+    }
+    const res = await api(`/api/rituals/${ritualId}`);
+    await expectStatus(res, 200);
+    const data = await res.json();
+    expect(data.id).toBeDefined();
+    expect(data.title).toBeDefined();
+  });
+
+  test("GET /api/rituals/{id} - with non-existent ritual (valid UUID format)", async () => {
+    const nonExistentUUID = "00000000-0000-0000-0000-000000000000";
+    const res = await api(`/api/rituals/${nonExistentUUID}`);
+    await expectStatus(res, 404);
   });
 });
