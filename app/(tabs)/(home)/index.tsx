@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
 
   const handleCommence = () => {
-    console.log('[Home] Commence protocol tapped');
+    console.log('[Home] daily affirmation tapped');
   };
 
   return (
@@ -46,9 +46,9 @@ export default function HomeScreen() {
         onPress={handleCommence}
         style={[styles.ctaContainer, { bottom: insets.bottom + 40 }]}
         accessibilityRole="button"
-        accessibilityLabel="commence protocol"
+        accessibilityLabel="daily affirmation"
       >
-        <Text style={styles.ctaText}>commence protocol</Text>
+        <Text style={styles.ctaText}>daily affirmation</Text>
       </Pressable>
     </View>
   );
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontFamily: 'PlayfairDisplay_700Bold',
-    fontSize: 22,
+    fontSize: 16,
     color: LD.text,
     letterSpacing: 3,
   },

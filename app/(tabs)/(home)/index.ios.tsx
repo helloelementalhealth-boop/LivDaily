@@ -49,7 +49,7 @@ export default function HomeScreen() {
           onPress={handleCommence}
           style={[styles.ctaContainer, { bottom: insets.bottom + 40 }]}
           accessibilityRole="button"
-          accessibilityLabel="commence protocol"
+          accessibilityLabel="Daily Practice"
         >
           <Text style={styles.ctaText}>commence protocol</Text>
         </Pressable>
