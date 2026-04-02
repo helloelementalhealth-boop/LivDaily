@@ -12,7 +12,7 @@ export default function TabLayout() {
         <Icon sf="line.3.horizontal" />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
-        <Icon sf="gearshape" />
+        <Icon sf="person" />
       </NativeTabs.Trigger>
     </NativeTabs>
   );

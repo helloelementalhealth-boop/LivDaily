@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Platform,
@@ -9,7 +8,6 @@ import {
 } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { IconSymbol } from '@/components/IconSymbol';
 import { BlurView } from 'expo-blur';
 import { useTheme } from '@react-navigation/native';
 import Animated, {
@@ -18,7 +16,6 @@ import Animated, {
   withSpring,
   interpolate,
 } from 'react-native-reanimated';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Href } from 'expo-router';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -26,8 +23,7 @@ const { width: screenWidth } = Dimensions.get('window');
 export interface TabBarItem {
   name: string;
   route: Href;
-  icon: keyof typeof MaterialIcons.glyphMap;
-  label: string;
+  renderIcon: (color: string) => React.ReactNode;
 }
 
 interface FloatingTabBarProps {
@@ -95,6 +91,7 @@ export default function FloatingTabBar({
   }, [activeTabIndex, animatedValue]);
 
   const handleTabPress = (route: Href) => {
+    console.log('[FloatingTabBar] tab pressed:', route);
     router.push(route);
   };
 
@@ -182,21 +179,7 @@ export default function FloatingTabBar({
                   activeOpacity={0.7}
                 >
                   <View key={index} style={styles.tabContent}>
-                    <IconSymbol
-                      android_material_icon_name={tab.icon}
-                      ios_icon_name={tab.icon}
-                      size={24}
-                      color={isActive ? theme.colors.primary : (theme.dark ? '#98989D' : '#000000')}
-                    />
-                    <Text
-                      style={[
-                        styles.tabLabel,
-                        { color: theme.dark ? '#98989D' : '#8E8E93' },
-                        isActive && { color: theme.colors.primary, fontWeight: '600' },
-                      ]}
-                    >
-                      {tab.label}
-                    </Text>
+                    {tab.renderIcon(isActive ? theme.colors.primary : (theme.dark ? '#98989D' : '#000000'))}
                   </View>
                 </TouchableOpacity>
                 </React.Fragment>
@@ -242,7 +225,7 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     flexDirection: 'row',
-    height: 60,
+    height: 48,
     alignItems: 'center',
     paddingHorizontal: 4,
   },
@@ -250,17 +233,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   tabContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
-  },
-  tabLabel: {
-    fontSize: 9,
-    fontWeight: '500',
-    marginTop: 2,
-    // Dynamic styling applied in component
   },
 });

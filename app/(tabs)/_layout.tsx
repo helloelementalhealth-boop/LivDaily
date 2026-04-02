@@ -3,25 +3,23 @@ import { View } from 'react-native';
 import { Slot } from 'expo-router';
 import FloatingTabBar from '@/components/FloatingTabBar';
 import { LD } from '@/constants/Colors';
+import { Sun, AlignJustify, User } from 'lucide-react-native';
 
 const TABS = [
   {
     name: 'home',
     route: '/(tabs)/home' as const,
-    icon: 'wb-sunny' as const,
-    label: '',
+    renderIcon: (color: string) => <Sun size={24} color={color} />,
   },
   {
     name: '(collective)',
     route: '/(tabs)/(collective)' as const,
-    icon: 'menu' as const,
-    label: '',
+    renderIcon: (color: string) => <AlignJustify size={24} color={color} />,
   },
   {
     name: 'profile',
     route: '/(tabs)/profile' as const,
-    icon: 'settings' as const,
-    label: '',
+    renderIcon: (color: string) => <User size={24} color={color} />,
   },
 ];
 
