@@ -9,6 +9,10 @@ export default function TabLayout() {
         <Icon sf="sun.max" />
         <Label>home</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="(collective)">
+        <Icon sf="rectangle.3.group" />
+        <Label>space</Label>
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
         <Icon sf="gearshape" />
         <Label>settings</Label>

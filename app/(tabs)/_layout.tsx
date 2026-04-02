@@ -12,6 +12,12 @@ const TABS = [
     label: 'home',
   },
   {
+    name: '(collective)',
+    route: '/(tabs)/(collective)' as const,
+    icon: 'layers' as const,
+    label: 'space',
+  },
+  {
     name: 'profile',
     route: '/(tabs)/profile' as const,
     icon: 'settings' as const,
@@ -25,7 +31,7 @@ export default function TabLayout() {
       <Slot />
       <FloatingTabBar
         tabs={TABS}
-        containerWidth={200}
+        containerWidth={280}
         borderRadius={35}
         bottomMargin={20}
       />
