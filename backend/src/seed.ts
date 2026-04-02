@@ -142,7 +142,7 @@ export async function seedData(app: App) {
 
       // Insert rooms
       const roomsToInsert = [
-        { slug: 'movement-breath', title: 'Movement and Breath', sortOrder: 1 },
+        { slug: 'movement-breath', title: 'Movement & Breath', sortOrder: 1 },
         { slug: 'restorative-space', title: 'Restorative Space', sortOrder: 2 },
         { slug: 'sleep-rituals', title: 'Sleep Rituals', sortOrder: 3 },
       ];
@@ -232,7 +232,7 @@ export async function seedData(app: App) {
               { step: 2, text: 'Breathe in for four counts. Hold for four. Exhale for six. Repeat three times.' },
               { step: 3, text: 'Let your breath return to its natural rhythm. Simply observe without changing anything.' },
             ],
-            self_care_lines: ['You do not have to earn rest.', 'This moment is enough.'],
+            self_care_lines: ["You don't have to earn rest.", 'This moment is enough.'],
           },
           sortOrder: 1,
         },
@@ -248,7 +248,7 @@ export async function seedData(app: App) {
             steps: [
               { step: 1, text: 'Lie on your back with your arms slightly away from your body, palms facing up.' },
               { step: 2, text: 'Starting at your feet, consciously tense each muscle group for five seconds, then release.' },
-              { step: 3, text: 'Work slowly upward, calves, thighs, belly, hands, shoulders, face, releasing as you go.' },
+              { step: 3, text: 'Work slowly upward — calves, thighs, belly, hands, shoulders, face — releasing as you go.' },
             ],
             self_care_lines: ['Your body has been carrying a lot.', 'Let it put something down.'],
           },
@@ -266,7 +266,7 @@ export async function seedData(app: App) {
             steps: [
               { step: 1, text: 'Sit near a window or somewhere with natural light. Close your eyes.' },
               { step: 2, text: 'Notice five things you can hear without labeling them as good or bad. Just listen.' },
-              { step: 3, text: 'Open your eyes softly. Let your gaze rest on something still, a plant, the sky, a wall.' },
+              { step: 3, text: 'Open your eyes softly. Let your gaze rest on something still — a plant, the sky, a wall.' },
             ],
             self_care_lines: ['Stillness is not emptiness.', 'You are allowed to just be here.'],
           },
@@ -301,7 +301,7 @@ export async function seedData(app: App) {
             format: 'flow',
             paragraphs: [
               'Begin at the top of your head. Notice any tension there and let it soften without effort.',
-              'Move slowly downward, forehead, jaw, throat, chest, pausing wherever you feel holding.',
+              'Move slowly downward — forehead, jaw, throat, chest — pausing wherever you feel holding.',
               'By the time you reach your feet, you may already be drifting. That is exactly right.',
             ],
           },
