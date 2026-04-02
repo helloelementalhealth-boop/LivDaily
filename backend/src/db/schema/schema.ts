@@ -1,4 +1,5 @@
-import { pgTable, uuid, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, timestamp, boolean, integer, jsonb } from 'drizzle-orm/pg-core';
+import { index } from 'drizzle-orm/pg-core';
 
 export const dailyBriefings = pgTable('daily_briefings', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -24,3 +25,32 @@ export const profileSettings = pgTable('profile_settings', {
   value: text('value').notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
+
+export const rooms = pgTable('rooms', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  slug: text('slug').unique().notNull(),
+  title: text('title').notNull(),
+  sortOrder: integer('sort_order').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const rituals = pgTable(
+  'rituals',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    roomId: uuid('room_id')
+      .notNull()
+      .references(() => rooms.id, { onDelete: 'cascade' }),
+    title: text('title').notNull(),
+    duration: integer('duration').notNull(),
+    thumbnailUrl: text('thumbnail_url').notNull(),
+    tag: text('tag').notNull(),
+    audioUrl: text('audio_url'),
+    content: jsonb('content').notNull(),
+    sortOrder: integer('sort_order').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    roomIdIdx: index('rituals_room_id_idx').on(table.roomId),
+  })
+);
