@@ -7,7 +7,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, useNavigation } from 'expo-router';
 import { Image } from 'expo-image';
 import { LD } from '@/constants/Colors';
 
@@ -34,25 +34,42 @@ function resolveImageSource(source: string | undefined) {
 export default function RitualListScreen() {
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
   const router = useRouter();
+  const navigation = useNavigation();
   const [rituals, setRituals] = useState<Ritual[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (roomId) {
-      fetchRituals(roomId);
+      fetchRoomAndRituals(roomId);
     }
   }, [roomId]);
 
-  async function fetchRituals(id: string) {
-    console.log('[Collective] Fetching rituals for room:', id);
+  async function fetchRoomAndRituals(id: string) {
+    console.log('[Collective] Fetching room title and rituals for room:', id);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/rooms/${id}/rituals`);
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`HTTP ${res.status}: ${text.slice(0, 120)}`);
+      const [roomsRes, ritualsRes] = await Promise.all([
+        fetch(`${BACKEND_URL}/api/rooms`),
+        fetch(`${BACKEND_URL}/api/rooms/${id}/rituals`),
+      ]);
+
+      if (roomsRes.ok) {
+        const roomsData = await roomsRes.json();
+        const rooms: { id: string; title: string }[] = roomsData.rooms ?? roomsData ?? [];
+        const match = rooms.find((r) => r.id === id);
+        if (match?.title) {
+          console.log('[Collective] Room title resolved:', match.title);
+          navigation.setOptions({ title: match.title });
+        }
+      } else {
+        console.warn('[Collective] Could not fetch rooms list:', roomsRes.status);
       }
-      const data = await res.json();
+
+      if (!ritualsRes.ok) {
+        const text = await ritualsRes.text();
+        throw new Error(`HTTP ${ritualsRes.status}: ${text.slice(0, 120)}`);
+      }
+      const data = await ritualsRes.json();
       console.log('[Collective] Rituals loaded:', data.rituals?.length ?? 0);
       const sorted: Ritual[] = (data.rituals ?? []).sort(
         (a: Ritual, b: Ritual) => a.sort_order - b.sort_order
@@ -60,7 +77,7 @@ export default function RitualListScreen() {
       setRituals(sorted);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Failed to load rituals';
-      console.error('[Collective] Error fetching rituals:', msg);
+      console.error('[Collective] Error fetching room data:', msg);
       setError(msg);
     } finally {
       setLoading(false);

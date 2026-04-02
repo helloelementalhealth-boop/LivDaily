@@ -9,19 +9,19 @@ const TABS = [
     name: 'home',
     route: '/(tabs)/home' as const,
     icon: 'wb-sunny' as const,
-    label: 'home',
+    label: '',
   },
   {
     name: '(collective)',
     route: '/(tabs)/(collective)' as const,
-    icon: 'layers' as const,
-    label: 'space',
+    icon: 'menu' as const,
+    label: '',
   },
   {
     name: 'profile',
     route: '/(tabs)/profile' as const,
     icon: 'settings' as const,
-    label: 'settings',
+    label: '',
   },
 ];
 
