@@ -4,10 +4,10 @@
     "slug": "1-can-i-trigger-a-we",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/livdaily_app.png",
+    "icon": "./assets/images/LD logo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/livdaily_app.png",
+      "image": "./assets/images/LD logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/livdaily_app.png",
+        "foregroundImage": "./assets/images/LD logo.png",
         "backgroundColor": "#0D1117"
       },
       "package": "com.helloelemental.livdaily",
