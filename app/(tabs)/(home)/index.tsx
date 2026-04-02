@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   briefingText: {
     fontFamily: 'DMSans_300Light',
-    fontSize: 17,
+    fontSize: 16,
     lineHeight: 28,
     color: LD.text,
     textAlign: 'left',
