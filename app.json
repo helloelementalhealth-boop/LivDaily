@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "1-can-i-trigger-a-we",
-    "slug": "1-can-i-trigger-a-we",
+    "name": "LivDaily",
+    "slug": "livdaily",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/LD logo.png",
