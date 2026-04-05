@@ -38,7 +38,7 @@
       "expo-web-browser",
       "expo-secure-store"
     ],
-    "scheme": "1canitriggerawe",
+    "scheme": "livdaily",
     "experiments": {
       "typedRoutes": true
     },
